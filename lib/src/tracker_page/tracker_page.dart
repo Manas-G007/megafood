@@ -1,13 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/order_controller.dart';
 import 'package:megafood/src/utils/colors.dart';
 import 'package:megafood/src/utils/text_style.dart';
+import 'package:megafood/src/widget/empty_component.dart';
 import 'package:megafood/src/widget/glow_circle.dart';
 import 'package:megafood/src/widget/my_line.dart';
 import 'package:megafood/src/widget/text_time.dart';
 import 'package:megafood/src/widgets/tracker_card.dart';
+import 'package:get/get.dart';
 
 class TrackerPage extends StatefulWidget {
   const TrackerPage({super.key});
@@ -17,6 +19,8 @@ class TrackerPage extends StatefulWidget {
 }
 
 class _TrackerPageState extends State<TrackerPage> {
+
+  OrderController orderController=Get.put(OrderController());
 
   List temp=[
     [
@@ -48,7 +52,7 @@ class _TrackerPageState extends State<TrackerPage> {
         backgroundColor: ThemeColor.c9,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
+          child: Obx(()=>Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -56,8 +60,10 @@ class _TrackerPageState extends State<TrackerPage> {
                 child: Text("Track your order",
                 style: MyTextStyle.t6),
               ),
-              TrackerCard(temp: temp),
-              Container(
+              !orderController.isOrdered.value?
+              const EmptyCart()
+              :TrackerCard(temp: temp),
+              !orderController.isOrdered.value?const SizedBox():Container(
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
                 child: Column(
@@ -89,8 +95,9 @@ class _TrackerPageState extends State<TrackerPage> {
                   ],
                 ),
               )
+              
             ],
-          ),
+          )),
         )
         ));
   }

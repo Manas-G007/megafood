@@ -1,26 +1,65 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:megafood/src/controller/order_controller.dart';
 import 'package:megafood/src/utils/colors.dart';
 import 'package:megafood/src/utils/text_style.dart';
 import 'package:megafood/src/widget/number_btn.dart';
 import 'package:megafood/src/widget/text_rating.dart';
+import 'package:get/get.dart';
 
 class ItemSideCard extends StatefulWidget {
+  final String foodId;
   final String imgPath;
   final String heading;
   final String rating;
   final String price;
+  final int quantity;
   const ItemSideCard({super.key,
+  required this.foodId,
   required this.imgPath,
   required this.heading,
   required this.rating,
-  required this.price});
+  required this.price,
+  required this.quantity});
 
   @override
   State<ItemSideCard> createState() => _ItemSideCardState();
 }
 
 class _ItemSideCardState extends State<ItemSideCard> {
+  OrderController orderController=Get.put(OrderController());
+  int quantity=1;
+
+  void quantFunc(bool state){
+    setState(() {
+      if(state){
+        if(quantity<20){
+          quantity++;
+          orderController.updateQuantity(widget.foodId,quantity);
+        }
+      }else{
+        if(quantity==1){
+          orderController.clearValue(widget.foodId);
+        }else{
+          quantity--;
+          orderController.updateQuantity(widget.foodId,quantity);
+        }
+      }
+    });
+  }
+
+  @override
+  void initState(){
+    setState(() {
+      if(mounted){
+        quantity=widget.quantity;
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +82,7 @@ class _ItemSideCardState extends State<ItemSideCard> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left:12.w),
-                    child: Image.asset(widget.imgPath,
+                    child: Image.network(widget.imgPath,
                     width: 100.w),
                   ),
                   Container(
@@ -71,14 +110,18 @@ class _ItemSideCardState extends State<ItemSideCard> {
                             Text(widget.price,
                             style: MyTextStyle.t14,),
                             SizedBox(
-                              width: 70.w,
+                              width: 75.w,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const NumberBtn(isAdd: false,isSmall: true),
-                                  Text("1",
+                                  GestureDetector(
+                                    onTap:()=>quantFunc(false),
+                                    child: const NumberBtn(isAdd: false,isSmall: true)),
+                                  Text(quantity.toString(),
                                   style: MyTextStyle.t9),
-                                  const NumberBtn(isAdd: true,isSmall: true),
+                                  GestureDetector(
+                                    onTap:()=>quantFunc(true),
+                                    child: const NumberBtn(isAdd: true,isSmall: true)),
                                 ],),
                             ),
                           ],

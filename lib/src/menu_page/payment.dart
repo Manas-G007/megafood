@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/order_controller.dart';
+import 'package:megafood/src/home_page/bottom_navigation.dart';
 import 'package:megafood/src/utils/colors.dart';
+import 'package:megafood/src/utils/popups.dart';
 import 'package:megafood/src/utils/text_style.dart';
 import 'package:megafood/src/widget/back_text.dart';
 import 'package:megafood/src/widget/my_line.dart';
 import 'package:megafood/src/widget/order_btn.dart';
 import 'package:megafood/src/widget/text_price.dart';
 import 'package:megafood/src/widget/tick_text.dart';
+import 'package:get/get.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -17,6 +21,21 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  OrderController orderController=Get.put(OrderController());
+  List<bool> option=[false,false];
+
+  void setOption(int select){
+    setState(() {
+      if(select==0){
+        option[select]=true;
+        option[1]=false;
+      }else{
+        option[select]=true;
+        option[0]=false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,11 +52,11 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Column(
             children: [
               Gap(15.h),
-              const TextPrice(text: "Sub Amount", price: "₹ 100"),
+              TextPrice(text: "Sub Amount", price: "₹ ${orderController.totalPrice}"),
               const TextPrice(text: "Delivery", price: "₹ 10"),
               const MyLine(width: 1),
               Gap(10.h),
-              const TextPrice(text: "Total Amount", price: "₹ 110"),
+              TextPrice(text: "Total Amount", price: "₹ ${orderController.totalPrice.value+10}"),
             ]),
         ),
         bottomNavigationBar: Container(
@@ -84,15 +103,19 @@ class _PaymentPageState extends State<PaymentPage> {
                                 blurRadius: 15
                               )],
                         ),
-                        child:const SingleChildScrollView(
+                        child:SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              TickText(text: "Cash On Delivery"),
-                              MyLine(width: 1),
-                              TickText(text: "Visa/Debit/Credit"),
+                              GestureDetector(
+                                onTap: ()=>setOption(0),
+                                child: TickText(text: "Cash On Delivery",status: option[0])),
+                              const MyLine(width: 1),
+                              GestureDetector(
+                                onTap: ()=>setOption(1),
+                                child: TickText(text: "Pay through UPI",status: option[1])),
                             ],
                           ),
                         ),
@@ -111,11 +134,25 @@ class _PaymentPageState extends State<PaymentPage> {
                     SizedBox(
                       width: 120.w,
                       child: Center(
-                        child: Text("3 Items",
+                        child: Text("${orderController.totalItem.value!=0 ? orderController.totalItem:""} ${orderController.totalItem.value==0?"No Item":orderController.totalItem.value==1?"Item":"Items"}",
                         style:MyTextStyle.t3),
                       ),
                     ),     
-                    const OrderBtn(text1: "Continue", text2: "₹ 100")
+                    GestureDetector(
+                      onTap: (){
+                        if(option[0]){
+                          showSuccessDialogBox(context, "Item has been order successfully!")
+                          .then((value) => Get.offAll(()=>const BottomBar(),transition: Transition.rightToLeft));
+                          orderController.setIsOrdered();
+                          return;
+                        }
+                        if(option[1]){
+                          showInfoDialogBox(context,"Online payment method coming soon!");
+                          return;
+                        }
+                        showInfoDialogBox(context,"Please select the payment method!");
+                      },
+                      child: OrderBtn(text1: "Pay Now", text2: "₹ ${orderController.totalPrice}"))
                   ],
                 ),
               ),

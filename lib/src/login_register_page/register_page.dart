@@ -77,7 +77,8 @@ class _RegisterPageState extends State<RegisterPage> {
           "email":_emailController.text,
           "imgLink":"",
           "phone":0,
-          "address":""
+          "address":"",
+          "userOrder":[]
         }
       );
 

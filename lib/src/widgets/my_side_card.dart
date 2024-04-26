@@ -41,13 +41,13 @@ class MySideCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(left:12.w),
-                  child: Image.asset(imgPath,
+                  child: Image.network(imgPath,
                   width: 100.w),
                 ),
                 Container(
                   width: 210.w,
                   height: double.maxFinite,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 15.h),
+                  padding: EdgeInsets.symmetric(horizontal: 15.w,vertical: 15.h),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,

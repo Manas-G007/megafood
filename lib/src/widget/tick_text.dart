@@ -3,23 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:megafood/src/utils/colors.dart';
 import 'package:megafood/src/utils/text_style.dart';
 
-class TickText extends StatefulWidget {
+class TickText extends StatelessWidget {
   final String text;
+  final bool status;
   const TickText({super.key,
-  required this.text});
-
-  @override
-  State<TickText> createState() => _TickTextState();
-}
-
-class _TickTextState extends State<TickText> {
-  bool tick=true;
-
-  void toggleTick(){
-    setState(() {
-      tick=!tick;
-    });
-  }
+  required this.text,
+  required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +17,11 @@ class _TickTextState extends State<TickText> {
       child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.text,
+                Text(text,
                   style: MyTextStyle.t16,),
                 GestureDetector(
-                  onTap: () {
-                    toggleTick();
-                  },
                   child: Icon(
-                    tick?Icons.circle:Icons.check_circle,
+                    status?Icons.check_circle:Icons.circle,
                   color:ThemeColor.c30,
                   size: 26,),
                 )

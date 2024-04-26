@@ -6,9 +6,11 @@ import 'package:megafood/src/utils/text_style.dart';
 class MySearchBar extends StatelessWidget {
   final TextEditingController controller;
   final bool isTouch;
+  final Function onChange;
   const MySearchBar({super.key,
   required this.controller,
-  required this.isTouch});
+  required this.isTouch,
+  required this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,9 @@ class MySearchBar extends StatelessWidget {
                         controller: controller,
                         style: MyTextStyle.t7,
                         cursorColor: ThemeColor.c11,
+                        onChanged: (e){
+                          onChange(e);
+                        },
                         decoration: InputDecoration(                          
                           border: InputBorder.none,
                           hintText: "Seach ...",

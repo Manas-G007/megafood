@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ThemeColor{
-  static const c1=Color(0xffffffff);
+
+  static const c1 =Color(0xffffffff);
   static const c2=Color.fromARGB(25, 0, 0, 0);
   static const c3=Color(0xff000000);
   static const c4=Color(0xffFD822C);
@@ -33,5 +34,11 @@ class ThemeColor{
   static const c30=Color(0x99008000);
   static const c31=Color(0x990000FF);
   static const c32=Color(0xfffd5f05);
-
+  static const c33=Color(0xff9CAADA);
+  static const c34=Color(0xff62CF50);
+  static const c35=Color(0xffDE3947);
+  static const c36=Color.fromARGB(255, 166, 186, 235);
+  static const c37=Color(0xff98F889);
+  static const c38=Color(0xffFF7D8A);
+  static const c39=Color(0xff808282);
 }

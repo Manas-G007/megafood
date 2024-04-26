@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/order_controller.dart';
 import 'package:megafood/src/menu_page/payment.dart';
 import 'package:megafood/src/utils/colors.dart';
 import 'package:megafood/src/utils/text_style.dart';
@@ -22,6 +23,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final TextEditingController _senderAddressController = TextEditingController();
   final TextEditingController _recieverAddressController = TextEditingController();
+  OrderController orderController = Get.put(OrderController());
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class _MapPageState extends State<MapPage> {
         ),
         bottomNavigationBar: Container(
           width: double.maxFinite,
-          height: 260,
+          height: 270,
           decoration:const BoxDecoration(
             borderRadius: BorderRadius.vertical(
               top:Radius.circular(20)
@@ -56,7 +58,7 @@ class _MapPageState extends State<MapPage> {
           child:Column(
             children: [
               Container(
-                height: 200,
+                height: 210,
                 width: double.maxFinite,
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
@@ -69,7 +71,7 @@ class _MapPageState extends State<MapPage> {
                   children: [
                     Container(
                         width: double.maxFinite,
-                        height: 130,
+                        height: 140,
                         padding: EdgeInsets.symmetric(horizontal: 20.w),
                         decoration: BoxDecoration(
                           color:ThemeColor.c1,
@@ -114,7 +116,7 @@ class _MapPageState extends State<MapPage> {
                     SizedBox(
                       width: 120.w,
                       child: Center(
-                        child: Text("3 Items",
+                        child: Text("${orderController.totalItem.value!=0 ? orderController.totalItem:""} ${orderController.totalItem.value==0?"No Item":orderController.totalItem.value==1?"Item":"Items"}",
                         style:MyTextStyle.t3),
                       ),
                     ),     
@@ -125,7 +127,7 @@ class _MapPageState extends State<MapPage> {
                             transition: Transition.rightToLeft
                           );
                       },
-                      child: const OrderBtn(text1: "Continue", text2: "₹ 100"))
+                      child: OrderBtn(text1: "Next", text2: "₹ ${orderController.totalPrice}"))
                   ],
                 ),
               ),

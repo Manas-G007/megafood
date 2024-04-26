@@ -59,7 +59,8 @@ class MySmallCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(text,
-                              style: MyTextStyle.t9),
+                              style: MyTextStyle.t9,
+                              overflow: TextOverflow.ellipsis,),
                             ),
                           )
                         ],

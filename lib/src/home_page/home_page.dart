@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/order_controller.dart';
 import 'package:megafood/src/controller/userdata_controller.dart';
 import 'package:megafood/src/controller/food_controller.dart';
 import 'package:megafood/src/menu_page/menu_page.dart';
 import 'package:megafood/src/order_page/detailed_page.dart';
 import 'package:megafood/src/shimmer/card_1_shimmer.dart';
 import 'package:megafood/src/shimmer/card_2_shimmer.dart';
+import 'package:megafood/src/shimmer/card_3_shimmer.dart';
 import 'package:megafood/src/utils/text_style.dart';
 import 'package:megafood/src/widgets/my_big_card.dart';
 import 'package:megafood/src/widgets/my_card_1.dart';
@@ -28,11 +30,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _searchController=TextEditingController();
   UserController userController=Get.find();
   FoodController foodController=Get.put(FoodController());
+  OrderController orderController=Get.put(OrderController());
 
   @override
   void initState(){
     foodController.fetchCategoryZero(context);
     foodController.fetchCategoryOne(context);
+    orderController.getUserOrder();
     super.initState();
   }
 
@@ -80,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: MySearchBar(
                         controller: _searchController,
                         isTouch: true,
+                        onChange: (){},
                       ),
                     ),
                   ]),
@@ -107,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
                 }),
               ),
-              const MySeeAll(text1: "Discover Food", text2: "See all"),
+              const MySeeAll(text1: "Discover Food", text2: "See all",showCombo: false),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 15.w,vertical: 10.h),
@@ -135,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
                 })
               ),
-              const MySeeAll(text1: "Good Food nearby", text2: "See all"),
+              const MySeeAll(text1: "Good Food nearby", text2: "See all",showCombo: true),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 15.w,vertical: 10.h),
@@ -162,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   })
                 ):Row(
                   children: List.generate(3, (index){
-                    return const CardTwoShimmer();
+                    return const CardThreeShimmer();
                   }),
                 );
                 }

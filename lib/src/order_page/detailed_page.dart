@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/food_controller.dart';
+import 'package:megafood/src/controller/order_controller.dart';
 import 'package:megafood/src/utils/colors.dart';
+import 'package:megafood/src/utils/snack_bars.dart';
 import 'package:megafood/src/utils/text_style.dart';
 import 'package:megafood/src/widget/back_text.dart';
 import 'package:megafood/src/widget/number_btn.dart';
@@ -12,6 +17,7 @@ import 'package:megafood/src/widget/star_text.dart';
 import 'package:megafood/src/widget/three_values.dart';
 import 'package:megafood/src/widgets/my_rating.dart';
 import 'package:megafood/src/widgets/profile_img.dart';
+import 'package:get/get.dart';
 
 class DetailedPage extends StatefulWidget {
   final QueryDocumentSnapshot<Map<String,dynamic>> data;
@@ -22,8 +28,49 @@ class DetailedPage extends StatefulWidget {
 }
 
 class _DetailedPageState extends State<DetailedPage> {
+  FoodController foodController=Get.put(FoodController());
+  OrderController orderController=Get.put(OrderController());
   final TextEditingController _reviewController=TextEditingController();
+  
   String rating="5";
+  int quantity=1;
+
+  void quantFunc(bool state){
+    setState(() {
+      if(state){
+        if(quantity<20) quantity++;
+      }else{
+        if(quantity>1) quantity--;
+      }
+    });
+  }
+
+
+  void handleReviewSubmit() async{
+    if(_reviewController.text.trim().isEmpty){
+      MySnackBar.errorSnackBar(context, "Please fill the review");
+      return;
+    }
+   await foodController.createNewReview(context, 
+    widget.data.id, 
+    _reviewController.text.trim(), rating);
+    _reviewController.text="";
+  }
+
+  void handleAddToCard(){
+    orderController.setValues({
+      "foodId":widget.data.id,
+      "name":widget.data['name'],
+      "rating":widget.data['rating'],
+      "price":widget.data['price'],
+      "imgUrl":widget.data['imgUrl'],
+      "quantity":quantity,
+      "isPurchased":false
+    });
+
+    MySnackBar.successSnackBar(context, "Item Added to Cart!");
+  }
+
   @override
   void initState(){
     super.initState();
@@ -33,7 +80,7 @@ class _DetailedPageState extends State<DetailedPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: ThemeColor.c9,
+        backgroundColor: ThemeColor.c7,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: ThemeColor.c9,
@@ -67,9 +114,10 @@ class _DetailedPageState extends State<DetailedPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(widget.data['name'],style: MyTextStyle.t20),
-                MyRating(
-                  rating: widget.data['rating'].toString(),
-                  isBig: true,)
+                Obx(()=> MyRating(
+                    rating: foodController.category.where((e)=>e.id == widget.data.id).toList()[0]['rating'].toStringAsFixed(1),
+                    isBig: true,),
+                )
               ],
             ),
           ),
@@ -165,14 +213,19 @@ class _DetailedPageState extends State<DetailedPage> {
                                       )
                                     ],
                                   ),
-                                  Container(
-                                    height: 25.sp,
-                                    width: 25.sp,
-                                    decoration: BoxDecoration(
-                                      color:ThemeColor.c32,
-                                      borderRadius: BorderRadius.circular(50)
-                                    ),
-                                    child: const Icon(Icons.arrow_forward_outlined,color:ThemeColor.c1))
+                                  GestureDetector(
+                                    onTap:(){
+                                      handleReviewSubmit();
+                                    },
+                                    child: Container(
+                                      height: 25.sp,
+                                      width: 25.sp,
+                                      decoration: BoxDecoration(
+                                        color:ThemeColor.c32,
+                                        borderRadius: BorderRadius.circular(50)
+                                      ),
+                                      child:  const Icon(Icons.arrow_forward_outlined,color:ThemeColor.c1)),
+                                  )
                                 ],
                               ))
                           ),
@@ -185,37 +238,39 @@ class _DetailedPageState extends State<DetailedPage> {
               ]),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Container(
-                  color:ThemeColor.c7,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 8.h),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ProfileImage(size: 40.sp, imagePath: "assets/images/pic1.png"),
-                      Gap(20.w),
-                      Expanded(
-                        child: Column(
+         Obx(()=>SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                      final ele=foodController.category.where((e)=>e.id == widget.data.id).toList()[0]['review'][index];
+                      return Container(
+                        color:ThemeColor.c7,
+                        padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 8.h),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Username",
-                            style: MyTextStyle.t23),
-                            const ReadMore(
-                              text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec dolor risus. Nulla nec dolor risus. Nulla nec dolor risus.",
-                              limit: 50,
-                              isReview: true,)
+                            ProfileImage(size: 40.sp, imagePath: ele['imgUrl']),
+                            Gap(20.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(ele['username'],
+                                  style: MyTextStyle.t23),
+                                  ReadMore(
+                                    text: ele['comment'],
+                                    limit: 50,
+                                    isReview: true,)
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                );
-              },
-              childCount: 10,
-            ),
-          ),
+                      );
+                  },
+                  childCount: foodController.category.where((e)=>e.id == widget.data.id).toList()[0]['review'].length,
+                ),
+              ),
+         ),
         ],
       ),
         bottomNavigationBar: Container(
@@ -240,14 +295,20 @@ class _DetailedPageState extends State<DetailedPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const NumberBtn(isAdd: false),
-                    Text("1",
+                    GestureDetector(
+                      onTap: ()=>quantFunc(false),
+                      child: const NumberBtn(isAdd: false)),
+                    Text(quantity.toString(),
                     style: MyTextStyle.t15),
-                    const NumberBtn(isAdd: true),
+                    GestureDetector(
+                      onTap: ()=>quantFunc(true),
+                      child: const NumberBtn(isAdd: true)),
                   ],
                 ),
               ),              
-              const OrderBtn(text1: "Add to cart", text2: "₹ 100")
+              GestureDetector(
+                onTap:()=>handleAddToCard(),
+                child: OrderBtn(text1: "Add to cart", text2: "₹ ${quantity*widget.data['price']}"))
             ],
           )
         ),

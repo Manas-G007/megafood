@@ -138,16 +138,40 @@ class MyTextStyle{
                   fontSize: 16.sp,
                   color: ThemeColor.c3
                 );
- static final t24=TextStyle(
-                  fontFamily: 'Prompt',
-                  fontWeight: FontWeight.w300,
-                  fontSize: 13.sp,
-                  color: ThemeColor.c3
-                );
- static final t25=TextStyle(
-                  fontFamily: 'Prompt',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13.sp,
-                  color: ThemeColor.c3
-                );
+  static final t24=TextStyle(
+                    fontFamily: 'Prompt',
+                    fontWeight: FontWeight.w300,
+                    fontSize: 13.sp,
+                    color: ThemeColor.c3
+                  );
+  static final t25=TextStyle(
+                    fontFamily: 'Prompt',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13.sp,
+                    color: ThemeColor.c3
+                  );
+  static final t26=TextStyle(
+                fontFamily: 'Prompt',
+                fontWeight: FontWeight.w500,
+                fontSize: 18.sp,
+                color: ThemeColor.c33
+              );
+  static final t27=TextStyle(
+              fontFamily: 'Prompt',
+              fontWeight: FontWeight.w500,
+              fontSize: 18.sp,
+              color: ThemeColor.c34
+            );
+   static final t28=TextStyle(
+                fontFamily: 'Prompt',
+                fontWeight: FontWeight.w500,
+                fontSize: 18.sp,
+                color: ThemeColor.c35
+              );
+   static final t29=TextStyle(
+                fontFamily: 'Prompt',
+                fontWeight: FontWeight.w400,
+                fontSize: 28.sp,
+                color: ThemeColor.c1
+              );
 }

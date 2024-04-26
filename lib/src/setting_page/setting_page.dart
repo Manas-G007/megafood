@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/theme_controller.dart';
 import 'package:megafood/src/controller/userdata_controller.dart';
+import 'package:megafood/src/setting_page/theme_page.dart';
 import 'package:megafood/src/utils/snack_bars.dart';
 import 'package:megafood/src/setting_page/edit_profile_page.dart';
 import 'package:megafood/src/utils/colors.dart';
@@ -74,7 +77,12 @@ class _MySettingPageState extends State<MySettingPage> {
                         transition: Transition.rightToLeft);
                       },
                       child: const MyTile(icon: CupertinoIcons.person_alt, text: "Edit Profile")),
-                    const MyTile(icon: Icons.color_lens, text: "Theme"),
+                    GestureDetector(
+                      onTap:(){
+                        Get.to(()=>const MyThemePage(),
+                        transition: Transition.rightToLeft);
+                      },
+                      child: const MyTile(icon: Icons.color_lens, text: "Theme")),
                     const MyTile(icon: CupertinoIcons.cube_box_fill, text: "Order"),
                     const MyTile(icon: Icons.lock_person, text: "Privacy Policy"),
                     GestureDetector(

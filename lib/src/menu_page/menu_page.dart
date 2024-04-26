@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:megafood/src/controller/food_controller.dart';
+import 'package:megafood/src/order_page/detailed_page.dart';
 import 'package:megafood/src/utils/colors.dart';
 import 'package:megafood/src/widget/back_text.dart';
 import 'package:megafood/src/widgets/my_search_bar.dart';
 import 'package:megafood/src/widgets/my_side_card.dart';
+import 'package:get/get.dart';
 
 class MyMenuPage extends StatefulWidget {
   const MyMenuPage({super.key});
@@ -15,6 +18,39 @@ class MyMenuPage extends StatefulWidget {
 
 class _MyMenuPageState extends State<MyMenuPage> {
   final TextEditingController _searchController=TextEditingController();
+  FoodController foodController=Get.put(FoodController());
+  var allItem=[];
+  
+  void resetItem(){
+    setState(() {
+      if(mounted){
+        allItem=foodController.category;
+      }
+    });
+  }
+
+  void searchFilter(e){
+    allItem=[];
+    if(e!=""){
+      setState(() {
+        if(mounted){
+           for(var item in foodController.category){
+            if(item['name'].toLowerCase().contains(e)){
+              allItem.add(item);
+            }
+          }
+        }
+      });
+    }else{
+      resetItem();
+    }
+  }
+
+  @override
+  void initState(){
+    resetItem();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +74,7 @@ class _MyMenuPageState extends State<MyMenuPage> {
                   MySearchBar(
                     controller: _searchController,
                     isTouch: false,
+                    onChange: (e)=>searchFilter(e.toLowerCase().trim()),
                   ),
                 ],
               ),
@@ -51,15 +88,22 @@ class _MyMenuPageState extends State<MyMenuPage> {
               children: [
                 SizedBox(
                   child: Column(
-                    children: List.generate(10, (index) =>
-                        MySideCard(
-                          imgPath: "assets/images/food${(index + 1) % 4}.png",
-                          heading: "Burger",
-                          rating: "4.7",
-                          timeVal: "25 Min",
-                          distanceVal: "2.5 Km",
-                          smileVal: "36 Smile",
-                        ),
+                    children: List.generate(allItem.length, (index){
+                      final unitFood=allItem[index];
+                      return GestureDetector(
+                        onTap: (){
+                          Get.to(()=>DetailedPage(data: unitFood));
+                        },
+                        child: MySideCard(
+                            imgPath: unitFood['imgUrl'],
+                            heading: unitFood['name'],
+                            rating: unitFood['rating'].toStringAsFixed(1),
+                            timeVal: "${unitFood['time']} Min",
+                            distanceVal: "${unitFood['distance']} Km",
+                            smileVal: "${unitFood['smile']} Smile",
+                          ),
+                      );
+                      }
                     ),
                   ),
                 )      

@@ -36,7 +36,7 @@ class MyBtn2 extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.call,
-                      color: ThemeColor.c1,),
+                        color: ThemeColor.c1,),
                       Gap(10.w),
                       Text(text,
                       style: MyTextStyle.t3),

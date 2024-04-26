@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:megafood/src/home_page/home_page.dart';
-import 'package:megafood/src/menu_page/order_page.dart';
+import 'package:megafood/src/order_page/order_page.dart';
 import 'package:megafood/src/setting_page/setting_page.dart';
 import 'package:megafood/src/tracker_page/tracker_page.dart';
 import 'package:megafood/src/utils/colors.dart';
