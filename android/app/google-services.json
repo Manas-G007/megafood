@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344507006010",
+    "project_id": "megafood-409814",
+    "storage_bucket": "megafood-409814.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344507006010:android:872f18f7d0aa3484260903",
+        "android_client_info": {
+          "package_name": "com.example.megafood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlc_P8oOCpOvxTAKkvijD65nVcVTGI2Xg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
